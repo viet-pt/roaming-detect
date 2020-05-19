@@ -2,25 +2,50 @@ import React from 'react';
 import './style.scss';
 import { connect } from 'react-redux';
 import { ProgressAction } from 'services/users/user/actions';
-import { AdminService } from 'services/AdminService/AdminService';
-
+import HomeHeader from './Component/HomeHeader';
+import SimpleMap from './Component/SimpleMap';
+// import GoogleMap from './Component/GoogleMap';
 class HomePage extends React.PureComponent {
-  componentDidMount() {
-    this.getCateList();
+  state = {
+    isMarkerShown: true,
+    locationList: [
+      {
+        lat: 21.019051,
+        lng: 105.809652,
+      },
+      {
+        lat: 21.026081,
+        lng: 105.812581,
+      },
+      {
+        lat: 21.026001,
+        lng: 105.821765,
+      },
+      {
+        lat: 21.013302, 
+        lng: 105.819426,
+      },
+    ],
   }
 
-  getCateList = () => {
-    this.props.showProgressTurn();
-    AdminService.getCateList({}, res => {
-      this.props.hideProgressTurn();
-      console.log(res);
-    }, this.props.hideProgressTurn);
+  componentDidMount() {
+    // const script = document.createElement("script");
+    // const YOUR_API_KEY = 'AIzaSyA1nvR3azrYqsmyemL1DLRt_1QhTvR45So';
+    // script.src = `https://maps.googleapis.com/maps/api/js?key=${YOUR_API_KEY}`;
+    // script.async = true;
+    // script.defer = true;
+    // document.body.appendChild(script);
   }
 
   render() {
+    const { locationList } = this.state;
     return (
       <div className="home-page">
-        <h1>HOME PAGE</h1>
+        <HomeHeader />
+        {/* <GoogleMap
+          isMarkerShown={isMarkerShown}
+        /> */}
+        <SimpleMap locationList={locationList} />
       </div>
     );
   }

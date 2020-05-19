@@ -1,22 +1,26 @@
 .footer {
-  background-color: #5379f5;
   width: 100%;
   height: auto;
-  padding: 30px 0;
+  color: #385898;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-weight: 600;
+  padding: 20px;
+  margin-bottom: 1px;
+  border-top: solid 1px #385898;
+  border-bottom: solid 2px #385898;
+  &__left, &__right {
+    display: flex;
+    align-items: center;
+  }
   &__logo {
     height: 3em;
     width: auto;
   }
-  &__content {
-    margin-bottom: 10px;
-    line-height: 21px;
-    text-align: left;
-    color: #F0F2FD;
-    @media (max-width: 767px) {
-      font-size: 11px;
-    }
-    @media (min-width: 768px) {
-      font-size: 14px;
-    }
+  &__title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-right: 10px;
   }
 }

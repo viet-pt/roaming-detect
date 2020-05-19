@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { store } from 'store';
 import { routes } from 'global/routes';
 import { Provider } from 'react-redux';
-import { Footer, Header } from 'pages';
+import { Footer } from 'pages';
 import { ProgressTurn } from 'components';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'antd/dist/antd.css';
@@ -13,7 +13,6 @@ const App = () => (
     <Provider store={store}>
       <ProgressTurn />
       <div className="app-wrapper">
-        <Header />
         <Switch>
           {routes.map((route, index) => (
             <Route 

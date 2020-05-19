@@ -1,0 +1,28 @@
+.home-header {
+  display: flex;
+	align-items: center;
+	justify-content: space-between;
+  background-color: #385898;
+  color: #fff;
+  min-height: 70px;
+  padding: 0 40px 0 100px;
+  &__tile {
+    font-size: 17px;
+    margin-left: 10px;
+  }
+  &__input-wrapper {
+    display: flex;
+    align-items: center;
+    @media (max-width: 1500px) {
+      width: 65%;
+    }
+    @media (min-width: 1500px) {
+      width: 45%;
+    }
+     
+  }
+}
+
+.my-location {
+  color: red;
+}

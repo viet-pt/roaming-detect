@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMobileAlt, faKey, faArrowLeft } from '@fortawesome/fontawesome-free-solid';
+import { faUserCircle, faKey, faArrowLeft } from '@fortawesome/fontawesome-free-solid';
 import { SIGNUP, HOME_PAGE } from 'global/routes';
 import { withRouter } from 'react-router';
 import logo_VNPT from 'assets/icons/vnpt-logo.png';
@@ -37,11 +37,12 @@ class Login extends React.PureComponent {
       deviceType: 'IphoneXSMax',
       deviceOS: 'IOS',
     };
-    UserService.login(params, response => {
+    // UserService.login(params, response => {
       // console.log(response);
-    }, err => {
+    // }, err => {
       // console.log(err);
-    });
+    // });
+    this.props.history.push(HOME_PAGE);
   }
 
   render() {
@@ -68,12 +69,12 @@ class Login extends React.PureComponent {
               <form>
                 <div className="input-group form-group">
                   <div className="input-group-prepend">
-                    <span className="input-group-text"><FontAwesomeIcon icon={faMobileAlt} /></span>
+                    <span className="input-group-text"><FontAwesomeIcon icon={faUserCircle} /></span>
                   </div>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Số điện thoại"
+                    placeholder="Tài khoản"
                     value={phoneNumber}
                     onChange={this.handlePhoneNumber}
                   />

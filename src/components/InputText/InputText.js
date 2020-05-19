@@ -16,12 +16,13 @@ class InputText extends React.PureComponent {
   }
 
   render() {
-    const { value, placeholder, extensionClass } = this.props;
+    const { value, placeholder, extension, title, customClass } = this.props;
     return (
-      <div className="input-text">
+      <div className={`input-text ${customClass || ''}`}>
+        {title && <span className="mr-2">{title}</span>}
         <input
           type="text"
-          className={extensionClass}
+          className={extension}
           value={value}
           placeholder={placeholder}
           onChange={this.handleOnChange}
@@ -33,15 +34,16 @@ class InputText extends React.PureComponent {
 }
 
 InputText.propTypes = {
+  title: PropTypes.string,
   value: PropTypes.string,
   handleOnChange: PropTypes.func,
-  onEnter: PropTypes.func
+  onEnter: PropTypes.func,
 };
 
 InputText.defaultProps = {
   value: '',
   handleOnChange: () => {},
-  onEnter: () => {}
+  onEnter: () => {},
 };
 
 export default InputText;
