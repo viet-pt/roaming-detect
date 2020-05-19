@@ -1,0 +1,22 @@
+.footer {
+  background-color: #5379f5;
+  width: 100%;
+  height: auto;
+  padding: 30px 0;
+  &__logo {
+    height: 3em;
+    width: auto;
+  }
+  &__content {
+    margin-bottom: 10px;
+    line-height: 21px;
+    text-align: left;
+    color: #F0F2FD;
+    @media (max-width: 767px) {
+      font-size: 11px;
+    }
+    @media (min-width: 768px) {
+      font-size: 14px;
+    }
+  }
+}

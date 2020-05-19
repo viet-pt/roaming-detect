@@ -1,0 +1,38 @@
+@import "~global/styles";
+
+.button {
+  height: 40px;
+  padding: 0 35px;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:focus {
+    box-shadow: 0 0 2px #000;
+    outline: none;
+  }
+}
+
+.nav-btn {
+  &__title {
+    display: flex;
+    font-size: 16px;
+    color: #B1BAD0;
+    padding: 3px 5px;
+    line-height: 24px;
+    text-decoration: none !important;
+    &:hover {
+      border-radius: 20px;
+      color: #fff;
+      background-color: #5379f5;
+    }
+  }
+}
+.nav-active {
+  .nav-btn__title {
+    color: #fff;
+    background-color: #5379f5;
+  }
+}

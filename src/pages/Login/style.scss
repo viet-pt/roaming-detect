@@ -1,0 +1,142 @@
+.login {
+  background-image: url('../../assets/img/login-backgrd.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100%;
+  min-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  font-family: 'Numans', sans-serif;
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  &__logo {
+    width: 5em;
+    height: auto;
+  }
+  &__flag {
+    width: 1.6em;
+    height: auto;
+  }
+  &__back-icon {
+    margin: auto 0;
+  }
+  &__phone-code {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    background-color: #fff;
+  }
+  input {
+    border: solid 1px #fff;
+    outline: none;
+    &:focus {
+      border-color: #fff;;
+    }
+  }
+  .btn-common {
+    background-color: #5379f5;
+    color: #fff;
+    font-size: 21px;
+    width: 100%;
+    border-radius: 30px;
+    min-height: 2.2em;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .text-step-1 {
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-top: 4em;
+  }
+  .sign-up-btn {
+    margin-top: 7.5em;
+  }
+  .next-btn {
+    margin-top: 1.5em;
+  }
+  .end-btn {
+    margin-top: 2em;
+  }
+}
+
+.container {
+  align-content: center;
+}
+
+.text-description {
+  color: #ccc;
+  font-size: 13px;
+  margin-left: 1.25rem;
+}
+  
+.card {
+  height: 400px;
+  width: 400px;
+  margin: auto 0;
+  background-color: rgba(0,0,0,0.5) !important;
+  cursor: pointer;
+}
+  
+.card-header {
+  display: flex;
+  h3 {
+    color: white;
+    margin: auto auto;
+  }
+}
+
+.input-group-prepend span{
+  width: 50px;
+  background-color: #FFC312;
+  color: black;
+  border:0 !important;
+}
+  
+input:focus{
+  outline: 0 0 0 0  !important;
+  box-shadow: 0 0 0 0 !important;
+}
+  
+.remember{
+  color: white;
+}
+  
+.remember input {
+  width: 20px;
+  height: 20px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+  
+.login_btn{
+  color: black;
+  background-color: #FFC312;
+  width: 100%;
+  border-radius: 20px;
+  height: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+  
+.login_btn:hover{
+  color: black;
+  background-color: white;
+}
+  
+.links{
+  color: white;
+}
+  
+.links a{
+  margin-left: 4px;
+}
