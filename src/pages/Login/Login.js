@@ -1,22 +1,25 @@
 import React from 'react';
 import './style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faKey, faArrowLeft } from '@fortawesome/fontawesome-free-solid';
+import { faUserCircle, faKey } from '@fortawesome/fontawesome-free-solid';
 import { SIGNUP, HOME_PAGE } from 'global/routes';
 import { withRouter } from 'react-router';
 import logo_VNPT from 'assets/icons/vnpt-logo.png';
-import UserService from 'services/userService/UserService';
+import { KCSModal } from 'components';
+import { connect } from 'react-redux';
+import { ProgressAction } from 'services/users/user/actions';
+import { AdminService } from 'services/AdminService/AdminService';
 
 class Login extends React.PureComponent {
-
   state = {
-    phoneNumber: '',
+    userName: '',
     password: '',
+    isOpenModal: false
   }
 
-  handlePhoneNumber = (e) => {
+  handleUserName = (e) => {
     const { value } = e.target;
-    this.setState({ phoneNumber: value });
+    this.setState({ userName: value });
   } 
 
   handlePassword = (e) => {
@@ -24,40 +27,34 @@ class Login extends React.PureComponent {
     this.setState({ password: value });
   }
 
-  handleBack = () => {
-    this.props.history.push(HOME_PAGE);
+  handleLogin = () => {
+    const { userName, password } = this.state;
+    const params = {
+      userName,
+      password
+    };
+
+    this.props.showProgressTurn();
+    AdminService.login({ params }, () => {
+      this.props.hideProgressTurn();
+    }, () => {
+      this.props.hideProgressTurn();
+      this.setState({ isOpenModal: true });
+    });
+    this.props.history.push(HOME_PAGE); // NEED TO UPDATE
   }
 
-  handleLogin = () => {
-    const params = {
-      header: {
-        Channel: 'ios',
-      },
-      deviceId: 'G6TXMTFZKPHF',
-      deviceType: 'IphoneXSMax',
-      deviceOS: 'IOS',
-    };
-    // UserService.login(params, response => {
-      // console.log(response);
-    // }, err => {
-      // console.log(err);
-    // });
-    this.props.history.push(HOME_PAGE);
+  closeModal = () => {
+    this.setState({ isOpenModal: false });
   }
 
   render() {
-    const { phoneNumber, password } = this.state;
+    const { userName, password, isOpenModal } = this.state;
     return (
       <div className="container login">
         <div className="d-flex justify-content-center h-100">
           <div className="card">
             <div className="card-header">
-              <FontAwesomeIcon
-                color="white"
-                onClick={this.handleBack}
-                className="login__back-icon"
-                icon={faArrowLeft}
-              />
               <h3>Đăng nhập</h3>
               <img
                 alt="logo"
@@ -75,8 +72,8 @@ class Login extends React.PureComponent {
                     type="text"
                     className="form-control"
                     placeholder="Tài khoản"
-                    value={phoneNumber}
-                    onChange={this.handlePhoneNumber}
+                    value={userName}
+                    onChange={this.handleUserName}
                   />
                 </div>
                 <div className="input-group form-group">
@@ -114,9 +111,21 @@ class Login extends React.PureComponent {
             </div>
           </div>
         </div>
+        <KCSModal
+          isOpenModal={isOpenModal}
+          title="Có lỗi xảy ra"
+          content="Tên tài khoản hoặc mật khẩu không đúng, vui lòng thử lại!"
+          closeModal={this.closeModal}
+          confirmAction={this.closeModal}
+        />
       </div>
     );
   }
 }
 
-export default withRouter(Login);
+const mapDispatchToProps = dispatch => ({
+  showProgressTurn: () => dispatch({ type: ProgressAction.SHOW_PROGRESS }),
+  hideProgressTurn: () => dispatch({ type: ProgressAction.HIDE_PROGRESS }),
+});
+
+export default connect(null, mapDispatchToProps)(withRouter(Login));

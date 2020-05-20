@@ -1,16 +1,18 @@
 import React from 'react';
 import './style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faSignOutAlt, faUserCircle } from '@fortawesome/fontawesome-free-solid';
-import { InputText } from 'components';
+import { faHome, faSignOutAlt } from '@fortawesome/fontawesome-free-solid';
+import { InputText, InputTime } from 'components';
 import { Button } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
-
+import Profile from 'pages/Profile/Profile';
 class HomeHeader extends React.PureComponent {
   state = {
     phoneNumber: '',
-    startTime: '',
-    finishTime: '',
+    startTime: null,
+    startDate: null,
+    finishTime: null,
+    finishDate: null,
     logged: true,
   }
 
@@ -18,20 +20,42 @@ class HomeHeader extends React.PureComponent {
     this.setState({ phoneNumber: value });
   }
 
-  handleStartTime = (value) => {
+  onChangeDateStart = (value) => {
+    this.setState({ startDate: value });
+  }
+
+  onChangeTimeStart = (value) => {
     this.setState({ startTime: value });
   }
 
-  handleFinishTime = (value) => {
+  onChangeDateFinish = (value) => {
+    this.setState({ finishDate: value });
+  }
+
+  onChangeTimeFinish = (value) => {
     this.setState({ finishTime: value });
   }
 
-  handleFind = () => {
+  disabledButton = () => {
+    const { phoneNumber, startTime, startDate, finishTime, finishDate } = this.state;
+    return !(phoneNumber && startTime && finishTime && startDate && finishDate);
+  }
+
+  handleOk = () => {
+    const { phoneNumber, startTime, startDate, finishTime, finishDate } = this.state;
+    const start = startDate + ' ' + startTime;
+    const finish = finishDate + ' ' + finishTime;
     
+    const params = {
+      start,
+      finish,
+      phoneNumber
+    }
+    this.props.handleOk(params);
   }
 
   render() {
-    const { phoneNumber, startTime, finishTime, logged } = this.state;
+    const { phoneNumber, logged } = this.state;
     return (
       <div className="home-header">
         <div className="pointer home-header__left">
@@ -39,7 +63,7 @@ class HomeHeader extends React.PureComponent {
             <FontAwesomeIcon
               color="#fff"
               icon={faHome}
-              size="2x"
+              size="3x"
             />
           </Link>
           <span className="home-header__tile">HOME</span>
@@ -48,39 +72,40 @@ class HomeHeader extends React.PureComponent {
           <InputText
             title="SỐ ĐT"
             placeholder="Nhập số điện thoại"
-            value={startTime}
-            handleOnChange={this.handlePhoneNumber}
-          />
-          <InputText
-            title="BẮT ĐẨU"
-            value={finishTime}
-            handleOnChange={this.handlePhoneNumber}
-          />
-          <InputText
-            title="KẾT THÚC"
-            customClass="mr-1"
+            customClass="mr-3"
             value={phoneNumber}
+            isNumber
             handleOnChange={this.handlePhoneNumber}
+          />
+          <InputTime
+            title="BẮT ĐẨU"
+            customClass="mr-3"
+            onChangeDate={this.onChangeDateStart}
+            onChangeTime={this.onChangeTimeStart}
+          />
+          <InputTime
+            title="KẾT THÚC"
+            customClass="mr-2"
+            onChangeDate={this.onChangeDateFinish}
+            onChangeTime={this.onChangeTimeFinish}
           />
           <Button
             type="primary"
-            onClick={this.handleFind}
+            disabled={this.disabledButton()}
+            onClick={this.handleOk}
           >Tìm kiếm
-          </Button>       
+          </Button>      
+          <Button
+            disabled={this.props.isDisabledExport}
+            onClick={this.props.handleExportCSV}
+            className="btn-export ml-2"
+          >Export to Excel
+          </Button>      
         </div>
+
         <div>
-          {logged
-            && (
-            <Link to="./login">
-              <FontAwesomeIcon
-                color="#fff"
-                icon={faUserCircle}
-                size="2x"
-              />
-            </Link>
-            )}
-          {!logged
-            && (
+          {logged && <Profile />}
+          {!logged && (
             <Link to="./login">
               <FontAwesomeIcon
                 color="#fff"
@@ -88,7 +113,7 @@ class HomeHeader extends React.PureComponent {
                 size="lg"
               />
             </Link>
-            )}
+          )}
         </div>
       </div>
     );

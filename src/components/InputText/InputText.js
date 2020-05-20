@@ -1,7 +1,6 @@
 import React from 'react';
 import './style.scss';
 import PropTypes from 'prop-types';
-
 class InputText extends React.PureComponent {
 
   handleOnChange = (e) => {
@@ -16,12 +15,12 @@ class InputText extends React.PureComponent {
   }
 
   render() {
-    const { value, placeholder, extension, title, customClass } = this.props;
+    const { value, placeholder, extension, title, customClass, isNumber } = this.props;
     return (
       <div className={`input-text ${customClass || ''}`}>
-        {title && <span className="mr-2">{title}</span>}
+        {title && <span className="mr-2 input-text__title">{title}</span>}
         <input
-          type="text"
+          type={isNumber ? "number": "text"}
           className={extension}
           value={value}
           placeholder={placeholder}
@@ -36,12 +35,14 @@ class InputText extends React.PureComponent {
 InputText.propTypes = {
   title: PropTypes.string,
   value: PropTypes.string,
+  isNumber: PropTypes.bool,
   handleOnChange: PropTypes.func,
   onEnter: PropTypes.func,
 };
 
 InputText.defaultProps = {
   value: '',
+  isNumber: false,
   handleOnChange: () => {},
   onEnter: () => {},
 };

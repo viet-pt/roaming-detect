@@ -1,35 +1,29 @@
 import { postRequest } from 'utils/http';
 import { BACKEND_API } from 'global/environment';
-import { cui } from 'components';
-import { CommonService } from 'services/CommonService/CommonService';
+import sha256 from 'crypto-js/sha256';
 
 const baseURL = BACKEND_API;
 
-const transformCateList = function (response) {
-  const cateList = response.data;
-  cui.each(cateList, item => {
-    item.url = CommonService.changeAlias(item.name);
-  });
-  return cateList;
+const transformPasword = function (params) {
+  const secureCode = 'ZCUvpv3TvbTkUDs2';
+  const md5Hex = require('md5-hex');
+  const convertedPassword = sha256(md5Hex(`${params.password}#${secureCode}`)).toString().toLowerCase();
+  params.password = convertedPassword;
+}
+
+const login = function (params, successCallback, failCallback) {
+  transformPasword(params.params);
+  const URL = `${baseURL}login`;
+  return postRequest(URL, null, params, successCallback, failCallback);
 };
 
-const getCateList = function (params, successCallback, failCallback) {
-  const URL = `${baseURL}getCateList`;
-  return postRequest(URL, null, params, successCallback, failCallback, transformCateList);
-};
-
-const getRelatedList = function (data, successCallback, failCallback) {
-  const URL = `${baseURL}getRelatedList`;
-  const params = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-  return postRequest(URL, data, params, successCallback, failCallback);
+const getLocation = function (params, successCallback, failCallback) {
+  const URL = `${baseURL}getLocation`;
+  return postRequest(URL, null, params, successCallback, failCallback);
 };
 
 export const AdminService = {
-  getCateList,
-  getRelatedList,
+  login,
+  getLocation,
 };
 
