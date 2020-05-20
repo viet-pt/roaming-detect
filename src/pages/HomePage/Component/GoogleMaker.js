@@ -30,29 +30,33 @@ class GoogleMaker extends React.PureComponent {
           <InfoWindow position={{lat: item.lat, lng: item.lng}}
             onCloseClick={() => this.onMarkerClick(false)}>
             <table className="info">
-              <tr className="info__header">
-                <td colspan="2">Thông tin vị trí</td>
-              </tr>
+              <thead>
+                <tr className="info__header">
+                  <td colSpan="2">Thông tin vị trí</td>
+                </tr>
+              </thead>
 
-              <tr>
-                <td>Kinh độ</td>
-                <td>{item.lng}</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>Kinh độ</td>
+                  <td>{item.lng}</td>
+                </tr>
 
-              <tr>
-                <td>Vĩ độ</td>
-                <td>{item.lat}</td>
-              </tr>
+                <tr>
+                  <td>Vĩ độ</td>
+                  <td>{item.lat}</td>
+                </tr>
 
-              <tr>
-                <td>Thời gian</td>
-                <td>{item.time}</td>
-              </tr>
+                <tr>
+                  <td>Thời gian</td>
+                  <td>{item.time}</td>
+                </tr>
 
-              <tr>
-                <td>Địa chỉ</td>
-                <td>{item.DST_DEST}</td>
-              </tr>
+                <tr>
+                  <td>Địa chỉ</td>
+                  <td>{item.DST_DEST}</td>
+                </tr>
+              </tbody>
             </table>
           </InfoWindow>
         }

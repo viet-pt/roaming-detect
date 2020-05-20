@@ -9,6 +9,7 @@ import { KCSModal } from 'components';
 import { connect } from 'react-redux';
 import { ProgressAction } from 'services/users/user/actions';
 import { AdminService } from 'services/AdminService/AdminService';
+import Cookies from 'universal-cookie';
 
 class Login extends React.PureComponent {
   state = {
@@ -35,8 +36,15 @@ class Login extends React.PureComponent {
     };
 
     this.props.showProgressTurn();
-    AdminService.login({ params }, () => {
+    AdminService.login({ params }, (res) => {
       this.props.hideProgressTurn();
+      const cookies = new Cookies();
+      // NEED TO UPATE
+      cookies.set(
+        'access_token',
+        res.access_token,
+        { path: '/', expires: res.expires_in }
+      );
     }, () => {
       this.props.hideProgressTurn();
       this.setState({ isOpenModal: true });
