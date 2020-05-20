@@ -3,49 +3,98 @@ import './style.scss';
 import { connect } from 'react-redux';
 import { ProgressAction } from 'services/users/user/actions';
 import HomeHeader from './Component/HomeHeader';
-import SimpleMap from './Component/SimpleMap';
-// import GoogleMap from './Component/GoogleMap';
+import GoogleMap from './Component/GoogleMap';
+import { AdminService } from 'services/AdminService/AdminService';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
+import { KCSModal } from 'components';
+import { LOGIN } from 'global/routes';
+import { withRouter } from 'react-router';
 class HomePage extends React.PureComponent {
   state = {
     isMarkerShown: true,
+    isDisabledExport: true,
+    isOpenModal: false,
     locationList: [
       {
         lat: 21.019051,
         lng: 105.809652,
+        DST_DEST: '70A Thái Hà, Hà Nội',
+        time: '19-02-2020 6:10:23'
       },
       {
         lat: 21.026081,
         lng: 105.812581,
+        DST_DEST: '11 Nguyễn Công Hoan, Hà Nội',
+        time: '19-02-2020 10:10:23'
       },
       {
         lat: 21.026001,
         lng: 105.821765,
+        DST_DEST: '31 Giảng Võ, Hà Nội',
+        time: '19-02-2020 15:00:23'
       },
       {
         lat: 21.013302, 
         lng: 105.819426,
+        DST_DEST: '21 Thái Hà, Hà Nội',
+        time: '19-02-2020 19:30:23'
       },
     ],
   }
 
-  componentDidMount() {
-    // const script = document.createElement("script");
-    // const YOUR_API_KEY = 'AIzaSyA1nvR3azrYqsmyemL1DLRt_1QhTvR45So';
-    // script.src = `https://maps.googleapis.com/maps/api/js?key=${YOUR_API_KEY}`;
-    // script.async = true;
-    // script.defer = true;
-    // document.body.appendChild(script);
+  closeModal = () => {
+    this.setState({ isOpenModal: false });
+  }
+
+  handleExportCSV = () => {
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
+    const fileName = "data_export";
+
+    const ws = XLSX.utils.json_to_sheet(this.state.locationList);
+    const wb = {
+      Sheets: { 'data': ws },
+      SheetNames: ['data']
+    };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], {type: fileType});
+    FileSaver.saveAs(data, fileName + fileExtension);
+  }
+
+  handleOk = (params) => {
+    console.log(params);
+    this.props.showProgressTurn();
+
+    AdminService.getLocation({ params }, res => {
+      this.props.hideProgressTurn();
+      this.setState({
+        locationList: res.data,
+        isDisabledExport: false
+      });
+    }, () => {
+      this.props.hideProgressTurn();
+      this.setState({ isOpenModal: true });
+    });
   }
 
   render() {
-    const { locationList } = this.state;
+    const { locationList, isDisabledExport, isOpenModal } = this.state;
     return (
       <div className="home-page">
-        <HomeHeader />
-        {/* <GoogleMap
-          isMarkerShown={isMarkerShown}
-        /> */}
-        <SimpleMap locationList={locationList} />
+        <HomeHeader
+          handleOk={this.handleOk}
+          isDisabledExport={isDisabledExport}
+          handleExportCSV={this.handleExportCSV}
+        />
+        <GoogleMap locationList={locationList} />
+        <KCSModal
+          isOpenModal={isOpenModal}
+          title="Có lỗi xảy ra"
+          content="Có lỗi xảy ra, vui lòng thử lại!"
+          closeModal={this.closeModal}
+          confirmAction={this.closeModal}
+        />
       </div>
     );
   }
@@ -56,4 +105,4 @@ const mapDispatchToProps = dispatch => ({
   hideProgressTurn: () => dispatch({ type: ProgressAction.HIDE_PROGRESS }),
 });
 
-export default connect(null, mapDispatchToProps)(HomePage);
+export default connect(null, mapDispatchToProps)(withRouter(HomePage));

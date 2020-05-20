@@ -1,8 +1,15 @@
 .input-text {
-  width: 100%;
   display: flex;
   align-items: center;
+  &__title {
+    font-weight: 600;
+  }
+  &__err-msg {
+    color: red;
+    margin-top: 2px;
+  }
   input {
-    padding: 0 3px;
+    padding: 2px 5px;
+    color: #000;
   }
 }

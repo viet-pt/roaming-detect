@@ -1,0 +1,13 @@
+.input-time {
+  display: flex;
+  align-items: center;
+  &__title {
+    margin-right: 10px;
+    font-weight: 600;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+  }
+}
