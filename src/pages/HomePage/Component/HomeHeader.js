@@ -78,7 +78,7 @@ class HomeHeader extends React.PureComponent {
             handleOnChange={this.handlePhoneNumber}
           />
           <InputTime
-            title="BẮT ĐẨU"
+            title="BẮT ĐẦU"
             customClass="mr-3"
             onChangeDate={this.onChangeDateStart}
             onChangeTime={this.onChangeTimeStart}

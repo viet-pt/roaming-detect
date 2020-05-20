@@ -8,7 +8,6 @@ import { AdminService } from 'services/AdminService/AdminService';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { KCSModal } from 'components';
-import { LOGIN } from 'global/routes';
 import { withRouter } from 'react-router';
 class HomePage extends React.PureComponent {
   state = {
@@ -63,18 +62,20 @@ class HomePage extends React.PureComponent {
   }
 
   handleOk = (params) => {
-    console.log(params);
     this.props.showProgressTurn();
-
     AdminService.getLocation({ params }, res => {
       this.props.hideProgressTurn();
+      // NEED TO UPDATE
       this.setState({
         locationList: res.data,
         isDisabledExport: false
       });
     }, () => {
       this.props.hideProgressTurn();
-      this.setState({ isOpenModal: true });
+      this.setState({
+        isOpenModal: true,
+        isDisabledExport: true
+      });
     });
   }
 
