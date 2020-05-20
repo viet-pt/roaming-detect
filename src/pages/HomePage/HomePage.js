@@ -2,44 +2,61 @@ import React from 'react';
 import './style.scss';
 import { connect } from 'react-redux';
 import { ProgressAction } from 'services/users/user/actions';
-import HomeHeader from './Component/HomeHeader';
-import GoogleMap from './Component/GoogleMap';
 import { AdminService } from 'services/AdminService/AdminService';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { KCSModal } from 'components';
 import { withRouter } from 'react-router';
+import Cookies from 'universal-cookie';
+import GoogleMap from './Component/GoogleMap';
+import HomeHeader from './Component/HomeHeader';
+// import { LOGIN } from 'global/routes';
 class HomePage extends React.PureComponent {
   state = {
     isMarkerShown: true,
     isDisabledExport: true,
     isOpenModal: false,
+    isLogIn: true,
     locationList: [
       {
         lat: 21.019051,
         lng: 105.809652,
         DST_DEST: '70A Thái Hà, Hà Nội',
-        time: '19-02-2020 6:10:23'
+        time: '19-02-2020 6:10:23',
       },
       {
         lat: 21.026081,
         lng: 105.812581,
         DST_DEST: '11 Nguyễn Công Hoan, Hà Nội',
-        time: '19-02-2020 10:10:23'
+        time: '19-02-2020 10:10:23',
       },
       {
         lat: 21.026001,
         lng: 105.821765,
         DST_DEST: '31 Giảng Võ, Hà Nội',
-        time: '19-02-2020 15:00:23'
+        time: '19-02-2020 15:00:23',
       },
       {
         lat: 21.013302, 
         lng: 105.819426,
         DST_DEST: '21 Thái Hà, Hà Nội',
-        time: '19-02-2020 19:30:23'
+        time: '19-02-2020 19:30:23',
+      },
+      {
+        lat: 21.026081,
+        lng: 105.812581,
+        DST_DEST: '11 Nguyễn Công Hoan, Hà Nội',
+        time: '19-02-2020 20:10:23',
       },
     ],
+  }
+
+  componentDidMount() {
+    const cookies = new Cookies();
+    const token = cookies.get('access_token');
+    if (!token) {
+      // this.props.history.push(LOGIN);  // NEED TO UPDATE
+    }
   }
 
   closeModal = () => {
@@ -49,15 +66,15 @@ class HomePage extends React.PureComponent {
   handleExportCSV = () => {
     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const fileExtension = '.xlsx';
-    const fileName = "data_export";
+    const fileName = 'data_export';
 
     const ws = XLSX.utils.json_to_sheet(this.state.locationList);
     const wb = {
-      Sheets: { 'data': ws },
-      SheetNames: ['data']
+      Sheets: { data: ws },
+      SheetNames: ['data'],
     };
     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], {type: fileType});
+    const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileName + fileExtension);
   }
 
@@ -68,13 +85,13 @@ class HomePage extends React.PureComponent {
       // NEED TO UPDATE
       this.setState({
         locationList: res.data,
-        isDisabledExport: false
+        isDisabledExport: false,
       });
     }, () => {
       this.props.hideProgressTurn();
       this.setState({
         isOpenModal: true,
-        isDisabledExport: true
+        isDisabledExport: true,
       });
     });
   }
