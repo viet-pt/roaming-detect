@@ -1,11 +1,12 @@
 import React from 'react';
 import './style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faSignOutAlt } from '@fortawesome/fontawesome-free-solid';
+import { faHome } from '@fortawesome/fontawesome-free-solid';
 import { InputText, InputTime } from 'components';
 import { Button } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import Profile from 'pages/Profile/Profile';
+
 class HomeHeader extends React.PureComponent {
   state = {
     phoneNumber: '',
@@ -43,19 +44,19 @@ class HomeHeader extends React.PureComponent {
 
   handleOk = () => {
     const { phoneNumber, startTime, startDate, finishTime, finishDate } = this.state;
-    const start = startDate + ' ' + startTime;
-    const finish = finishDate + ' ' + finishTime;
+    const start = `${startDate} ${startTime}`;
+    const finish = `${finishDate} ${finishTime}`;
     
     const params = {
       start,
       finish,
-      phoneNumber
-    }
+      phoneNumber,
+    };
     this.props.handleOk(params);
   }
 
   render() {
-    const { phoneNumber, logged } = this.state;
+    const { phoneNumber } = this.state;
     return (
       <div className="home-header">
         <div className="pointer home-header__left">
@@ -103,18 +104,7 @@ class HomeHeader extends React.PureComponent {
           </Button>      
         </div>
 
-        <div>
-          {logged && <Profile />}
-          {!logged && (
-            <Link to="./login">
-              <FontAwesomeIcon
-                color="#fff"
-                icon={faSignOutAlt}
-                size="lg"
-              />
-            </Link>
-          )}
-        </div>
+        <Profile />
       </div>
     );
   }
