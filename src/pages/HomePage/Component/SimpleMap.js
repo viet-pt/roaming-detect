@@ -9,22 +9,27 @@ const loadJS = function (src) {
   script.async = true;
   ref.parentNode.insertBefore(script, ref);
 }
-
 class SimpleMap extends React.PureComponent {
-
+  
   componentDidMount() {
     window.initMap = this.initMap;
     const YOUR_API_KEY = 'AIzaSyDnXwhhg8SfyNqOzPcFJvW3NywvXoRPRww';
     loadJS(`https://maps.googleapis.com/maps/api/js?key=${YOUR_API_KEY}&callback=initMap`);
   }
 
-  initMap = () => {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.locationList !== this.props.locationList) {
+      this.initMap(this.props.locationList[0]);
+    }
+  }
+
+  initMap = (item) => {
     const google = window.google;
     const map = new google.maps.Map(ReactDOM.findDOMNode(this.refs.map), {
       zoom: 15,
       center: {
-        lat: 21.019051,
-        lng: 105.809652
+        lat: item ? item.lat : 21.019051,
+        lng: item ? item.lng : 105.809652
       }
     });
 
@@ -36,9 +41,13 @@ class SimpleMap extends React.PureComponent {
     const newLines = [];
     const { locationList } = this.props;
 
+    if (locationList.length === 0) {
+      return;
+    }
+    
     for (let i = 0; i < locationList.length - 1; i++) {
       const line = new google.maps.Polyline({
-        path: locationList.slice(i, i+2),
+        path: locationList.slice(i, i + 2),
         strokeColor: '#f33030',
         strokeOpacity: 1.0,
         strokeWeight: 2,
@@ -76,12 +85,12 @@ class SimpleMap extends React.PureComponent {
 
         <tr>
           <td>Thời gian</td>
-          <td>${item.time}</td>
+          <td>${item.lastUpdate}</td>
         </tr>
 
         <tr>
           <td>Địa chỉ</td>
-          <td>${item.DST_DEST}</td>
+          <td>${item.addr}</td>
         </tr>
       </tbody>
     </table>`

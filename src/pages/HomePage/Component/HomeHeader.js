@@ -13,8 +13,7 @@ class HomeHeader extends React.PureComponent {
     startTime: null,
     startDate: null,
     finishTime: null,
-    finishDate: null,
-    logged: true,
+    finishDate: null
   }
 
   handlePhoneNumber = (value) => {
@@ -47,12 +46,15 @@ class HomeHeader extends React.PureComponent {
     const start = `${startDate} ${startTime}`;
     const finish = `${finishDate} ${finishTime}`;
     
-    const params = {
-      start,
-      finish,
-      phoneNumber,
+    const data = {
+      // FAKE DATA
+      // startTime: start,
+      // endTime: finish,
+      startTime: '20-05-2020 00:00:00',
+      endTime: '21-05-2020 23:59:59',
+      msisdn: '84944064466',
     };
-    this.props.handleOk(params);
+    this.props.handleOk(data);
   }
 
   render() {
@@ -92,7 +94,8 @@ class HomeHeader extends React.PureComponent {
           />
           <Button
             type="primary"
-            disabled={this.disabledButton()}
+            // FAKE DATA
+            // disabled={this.disabledButton()}
             onClick={this.handleOk}
           >Tìm kiếm
           </Button>      
@@ -103,7 +106,6 @@ class HomeHeader extends React.PureComponent {
           >Export to Excel
           </Button>      
         </div>
-
         <Profile />
       </div>
     );
