@@ -8,8 +8,8 @@ import * as XLSX from 'xlsx';
 import { KCSModal } from 'components';
 import { withRouter } from 'react-router';
 import Cookies from 'universal-cookie';
-import GoogleMap from './Component/GoogleMap';
 import HomeHeader from './Component/HomeHeader';
+import SimpleMap from './Component/SimpleMap';
 // import { LOGIN } from 'global/routes';
 class HomePage extends React.PureComponent {
   state = {
@@ -105,7 +105,7 @@ class HomePage extends React.PureComponent {
           isDisabledExport={isDisabledExport}
           handleExportCSV={this.handleExportCSV}
         />
-        <GoogleMap locationList={locationList} />
+        <SimpleMap locationList={locationList} />
         <KCSModal
           isOpenModal={isOpenModal}
           title="Có lỗi xảy ra"
