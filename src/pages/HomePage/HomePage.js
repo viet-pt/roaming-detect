@@ -17,38 +17,7 @@ class HomePage extends React.PureComponent {
     isDisabledExport: true,
     isOpenModal: false,
     isLogIn: true,
-    locationList: [
-      {
-        lat: 21.019051,
-        lng: 105.809652,
-        DST_DEST: '70A Thái Hà, Hà Nội',
-        time: '19-02-2020 6:10:23',
-      },
-      {
-        lat: 21.026081,
-        lng: 105.812581,
-        DST_DEST: '11 Nguyễn Công Hoan, Hà Nội',
-        time: '19-02-2020 10:10:23',
-      },
-      {
-        lat: 21.026001,
-        lng: 105.821765,
-        DST_DEST: '31 Giảng Võ, Hà Nội',
-        time: '19-02-2020 15:00:23',
-      },
-      {
-        lat: 21.013302, 
-        lng: 105.819426,
-        DST_DEST: '21 Thái Hà, Hà Nội',
-        time: '19-02-2020 19:30:23',
-      },
-      {
-        lat: 21.026081,
-        lng: 105.812581,
-        DST_DEST: '11 Nguyễn Công Hoan, Hà Nội',
-        time: '19-02-2020 20:10:23',
-      },
-    ],
+    locationList: []
   }
 
   componentDidMount() {
@@ -78,11 +47,10 @@ class HomePage extends React.PureComponent {
     FileSaver.saveAs(data, fileName + fileExtension);
   }
 
-  handleOk = (params) => {
+  handleOk = (data) => {
     this.props.showProgressTurn();
-    AdminService.getLocation({ params }, res => {
+    AdminService.getLocation(data, res => {
       this.props.hideProgressTurn();
-      // NEED TO UPDATE
       this.setState({
         locationList: res.data,
         isDisabledExport: false,
