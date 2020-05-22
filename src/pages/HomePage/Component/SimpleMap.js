@@ -26,7 +26,7 @@ class SimpleMap extends React.PureComponent {
   initMap = (item) => {
     const google = window.google;
     const map = new google.maps.Map(ReactDOM.findDOMNode(this.refs.map), {
-      zoom: 15,
+      zoom: 13,
       center: {
         lat: item ? item.lat : 21.019051,
         lng: item ? item.lng : 105.809652
@@ -113,7 +113,8 @@ class SimpleMap extends React.PureComponent {
           lng: item.lng
         },
         map,
-        title: `${i + 1}`
+        label: `${i + 1}`,
+        zIndex: 1000 - i
       });
       
       const infowindow = this.getInfoWindow(i);

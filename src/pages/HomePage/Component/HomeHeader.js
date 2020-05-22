@@ -47,12 +47,12 @@ class HomeHeader extends React.PureComponent {
     const finish = `${finishDate} ${finishTime}`;
     
     const data = {
-      // FAKE DATA
-      // startTime: start,
-      // endTime: finish,
-      startTime: '20-05-2020 00:00:00',
-      endTime: '21-05-2020 23:59:59',
-      msisdn: '84944064466',
+      startTime: start,
+      endTime: finish,
+      msisdn: phoneNumber
+      // startTime: '20-05-2020 00:00:00',
+      // endTime: '21-05-2020 23:59:59',
+      // msisdn: '84944064466',
     };
     this.props.handleOk(data);
   }

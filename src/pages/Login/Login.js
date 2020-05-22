@@ -103,7 +103,8 @@ class Login extends React.PureComponent {
                   <div
                     type="submit"
                     className="login_btn"
-                    onClick={this.handleLogin}
+                    // onClick={this.handleLogin} // FAKE DATA
+                    onClick={() => this.setState({ isOpenModal: true })}
                   >Đăng nhập
                   </div>  
                 </div>
