@@ -15,9 +15,11 @@ class HomePage extends React.PureComponent {
   state = {
     isMarkerShown: true,
     isDisabledExport: true,
-    isOpenModal: false,
     isLogIn: true,
-    locationList: []
+    locationList: [],
+    isOpenModal: false,
+    title: '',
+    content: ''
   }
 
   componentDidMount() {
@@ -51,21 +53,33 @@ class HomePage extends React.PureComponent {
     this.props.showProgressTurn();
     AdminService.getLocation(data, res => {
       this.props.hideProgressTurn();
-      this.setState({
-        locationList: res.data,
-        isDisabledExport: false,
-      });
+      if (res.errorCode === "0") {
+        if (res.data && res.data.length === 0) {
+          this.setState({
+            isOpenModal: true,
+            isDisabledExport: true,
+            title: "Thông báo",
+            content: "Không có dữ liệu!"
+          });
+        }
+        this.setState({
+          locationList: res.data,
+          isDisabledExport: false,
+        });
+      }
     }, () => {
       this.props.hideProgressTurn();
       this.setState({
         isOpenModal: true,
         isDisabledExport: true,
+        title: "Có lỗi xảy ra",
+        content: "Có lỗi xảy ra, vui lòng thử lại!"
       });
     });
   }
 
   render() {
-    const { locationList, isDisabledExport, isOpenModal } = this.state;
+    const { locationList, isDisabledExport, isOpenModal, title, content } = this.state;
     return (
       <div className="home-page">
         <HomeHeader
@@ -76,8 +90,8 @@ class HomePage extends React.PureComponent {
         <SimpleMap locationList={locationList} />
         <KCSModal
           isOpenModal={isOpenModal}
-          title="Có lỗi xảy ra"
-          content="Có lỗi xảy ra, vui lòng thử lại!"
+          title={title}
+          content={content}
           closeModal={this.closeModal}
           confirmAction={this.closeModal}
         />

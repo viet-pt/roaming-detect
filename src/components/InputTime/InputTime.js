@@ -1,7 +1,8 @@
 import React from 'react';
 import './style.scss';
 import { DatePicker, TimePicker } from 'antd';
-// import moment from 'moment';
+import moment from 'moment';
+import PropTypes from 'prop-types';
 
 class InputTime extends React.PureComponent {
   onChangeDate = (date, dateString) => {
@@ -13,7 +14,7 @@ class InputTime extends React.PureComponent {
   }
 
 	render() {
-    const { title, customClass } = this.props;
+    const { title, customClass, defaultTime } = this.props;
 	  return (
       <div className={`input-time ${customClass || ''}`}>
         <div className="input-time__title">{title}</div>
@@ -27,12 +28,21 @@ class InputTime extends React.PureComponent {
           <TimePicker
             onChange={this.onChangeTime}
             placeholder="Chọn giờ"
-            // defaultValue={moment('00:00:00', 'HH:mm:ss')}
+            defaultValue={moment(defaultTime, 'HH:mm:ss')}
           />
         </div>
       </div>
 	  );
 	}
 }
+
+InputTime.propTypes = {
+  title: PropTypes.string,
+  defaultTime: PropTypes.string
+};
+
+InputTime.defaultProps = {
+  defaultTime: '00:00:00'
+};
 
 export default InputTime;
