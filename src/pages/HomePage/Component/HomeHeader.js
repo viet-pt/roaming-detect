@@ -10,9 +10,9 @@ import Profile from 'pages/Profile/Profile';
 class HomeHeader extends React.PureComponent {
   state = {
     phoneNumber: '',
-    startTime: null,
+    startTime: '00:00:00',
     startDate: null,
-    finishTime: null,
+    finishTime: '23:59:59',
     finishDate: null
   }
 
@@ -37,8 +37,8 @@ class HomeHeader extends React.PureComponent {
   }
 
   disabledButton = () => {
-    const { phoneNumber, startTime, startDate, finishTime, finishDate } = this.state;
-    return !(phoneNumber && startTime && finishTime && startDate && finishDate);
+    const { phoneNumber, startDate, finishDate } = this.state;
+    return !(phoneNumber && startDate && finishDate);
   }
 
   handleOk = () => {
@@ -50,8 +50,6 @@ class HomeHeader extends React.PureComponent {
       startTime: start,
       endTime: finish,
       msisdn: phoneNumber
-      // startTime: '20-05-2020 00:00:00',
-      // endTime: '21-05-2020 23:59:59',
       // msisdn: '84944064466',
     };
     this.props.handleOk(data);
@@ -89,13 +87,13 @@ class HomeHeader extends React.PureComponent {
           <InputTime
             title="KẾT THÚC"
             customClass="mr-2"
+            defaultTime="23:59:59"
             onChangeDate={this.onChangeDateFinish}
             onChangeTime={this.onChangeTimeFinish}
           />
           <Button
             type="primary"
-            // FAKE DATA
-            // disabled={this.disabledButton()}
+            disabled={this.disabledButton()}
             onClick={this.handleOk}
           >Tìm kiếm
           </Button>      

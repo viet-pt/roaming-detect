@@ -19,7 +19,9 @@ class SimpleMap extends React.PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.locationList !== this.props.locationList) {
-      this.initMap(this.props.locationList[0]);
+      if (this.props.locationList && this.props.locationList.length > 0) {
+        this.initMap(this.props.locationList[0]);
+      }
     }
   }
 
