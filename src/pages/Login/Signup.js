@@ -1,67 +1,81 @@
 import React from 'react';
 import './style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/fontawesome-free-solid';
+import { faArrowLeft, faUserCircle, faKey } from '@fortawesome/fontawesome-free-solid';
 import { KCSModal } from 'components';
 import { LOGIN } from 'global/routes';
 import { withRouter } from 'react-router';
 import logo_VNPT from 'assets/icons/vnpt-logo.png';
-import flag from 'assets/icons/vietnam.svg';
+
+const regexUserName = /^[a-zA-Z0-9_]+$/;
+const regexPassword = /^[a-zA-Z0-9_]+$/;
 
 class Signup extends React.PureComponent {
   state = {
-    currentStep: 0,
-    numberUser: '',
-    verifyCode: '',
+    userName: '',
+    password: '',
+    newPassword: '',
+    errMsg: null,
     isOpenModal: false,
   }
 
-  onChangeCurrentStep = step => {
-    this.setState({ currentStep: step });
-    if (step < 0) {
-      this.props.history.push(LOGIN);
-    }
+  onBack = () => {
+    this.props.history.push(LOGIN);
   }
 
-  handleInputChange = (e) => {
+  handleUserName = (e) => {
     const { value } = e.target;
-    this.setState({ numberUser: value });
+    this.setState({ userName: value });
   }
-
-  handleVerifyCodeChange = (e) => {
+  
+  handlePassword = (e) => {
     const { value } = e.target;
-    this.setState({ verifyCode: value });
+    this.setState({ password: value });
   }
 
-  sendOTPAgain = () => {
-    //call API
-  }
-
-  onCLickSendOTP = () => {
-    this.setState({ currentStep: 1 });
-    //call API
-  }
-
-  onVerifyCode = () => {
-    this.setState({ currentStep: 2 });
-    //call API
-  }
-
-  onEnterPass = () => {
-    this.setState({ isOpenModal: true });
-    //call API
+  handleNewPassword = (e) => {
+    const { value } = e.target;
+    this.setState({ newPassword: value });
   }
 
   closeModal = () => {
     this.setState({ isOpenModal: false });
   }
 
-  handleRegister = () => {
+  handleLogin = () => {
     this.props.history.push(LOGIN);
+
+  }
+
+  handleRegister = () => {
+    const { userName, password, newPassword } = this.state;
+    const testName = regexUserName.test(userName);
+    const testPassword = regexPassword.test(password);
+
+    let errMsg = null;
+    if (!userName || !password) {
+      errMsg = 'Tên tài khoản hoặc mật khẩu không được để trống!';
+    } else if (password !== newPassword) {
+      errMsg = 'Mật khẩu nhập lại không đúng!';
+    } else if (!testName) {
+      errMsg = 'Tên tài khoản chỉ được chứa số, chữ hoặc dấu gạch dưới!';
+    } else if (password.length < 6 || password.length > 18) {
+      errMsg = 'Mật khẩu phải dài từ 6 - 18 kí tự';
+    } else if (!testPassword) {
+      errMsg = 'Mật khẩu chỉ được chứa số, chữ hoặc dấu gạch dưới!';
+    }
+    if (errMsg) {
+      this.setState({ errMsg });
+      return;
+    }
+    // call API
+    // FAKE DATA
+    this.setState({ isOpenModal:true });
+
   }
 
   render() {
-    const { currentStep, numberUser, verifyCode, password, newPassword, isOpenModal } = this.state;
+    const { userName, password, newPassword, isOpenModal, errMsg } = this.state;
     return (
       <div className="container login">
         <div className="d-flex justify-content-center h-100">
@@ -70,14 +84,12 @@ class Signup extends React.PureComponent {
             <div className="card-header">
               <FontAwesomeIcon
                 color="white"
-                onClick={() => this.onChangeCurrentStep(currentStep - 1)}
+                onClick={this.onBack}
                 className="login__back-icon"
                 icon={faArrowLeft}
               />
               
-              {currentStep === 0 && <h3>Tạo tài khoản</h3>}
-              {currentStep === 1 && <h3>Mã xác thực OTP</h3>}
-              {currentStep === 2 && <h3>Tạo mật khẩu</h3>}
+              <h3>Tạo tài khoản</h3>
               <img
                 alt="logo"
                 src={logo_VNPT}
@@ -85,101 +97,69 @@ class Signup extends React.PureComponent {
               />
             </div>
 
-            <div className="text-description">
-              {(currentStep === 1 || currentStep === 2)
-                && (
-                <>
-                  {currentStep === 1 && <div>Mời bạn nhập mã xác thực vừa gửi đến số điện thoại:</div>}
-                  {currentStep === 2 && <div>Mời bạn tạo mật khẩu cho tài khoản có số điện thoại:</div>}
-                  <div>(+84){numberUser}</div>
-                </>
-                )}
-            </div>
-
             <div className="card-body">
               <form>
                 <div className="input-group form-group">
-                  {currentStep === 0 
-                    && (
-                    <>
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">
-                          <img
-                            alt="logo"
-                            src={flag}
-                            className="login__flag"
-                          />
-                        </span>
-                      </div>
-                      <span className="login__phone-code">+84</span>
-                      <input
-                        className="form-control"
-                        placeholder="888 888 8888"
-                        value={numberUser}
-                        onChange={this.handleInputChange}
-                      />
-                      <div
-                        onClick={this.onCLickSendOTP}
-                        className="sign-up-btn btn-common"
-                      >Gửi mã OTP
-                      </div>
-                    </>
-                    )}
+                  <div className="input-group-prepend">
+                    <span className="input-group-text"><FontAwesomeIcon icon={faUserCircle} /></span>
+                  </div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Tài khoản"
+                    value={userName}
+                    onChange={this.handleUserName}
+                  />
                 </div>
 
-                {currentStep === 1
-                  && (
-                  <>
-                    <input
-                      className="form-control"
-                      placeholder="888 888"
-                      value={verifyCode}
-                      onChange={this.handleVerifyCodeChange}
-                    />
-                    <div className="text-step-1">
-                      <span onClick={() => this.onChangeCurrentStep(0)}>Đổi số điện thoại</span>
-                      <span onClick={this.sendOTPAgain}>Gửi lại OTP</span>
-                    </div>
-                    <div
-                      onClick={this.onVerifyCode}
-                      className="next-btn btn-common"
-                    >Tiếp tục
-                    </div>
-                  </>
-                  )}
+                <div className="input-group form-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text"><FontAwesomeIcon icon={faKey} /></span>
+                  </div>
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Mật khẩu"
+                    value={password}
+                    onChange={this.handlePassword}
+                  />
+                </div>
 
-                {currentStep === 2
-                  && (
-                  <>
-                    <input
-                      className="form-control"
-                      placeholder="Mật khẩu có ít nhất 8 kí tự"
-                      value={password}
-                      onChange={this.handleVerifyCodeChange}
-                    />
-                    <br />
-                    <input
-                      className="form-control"
-                      placeholder="Nhập lại mật khẩu vừa tạo"
-                      value={newPassword}
-                      onChange={this.handleVerifyCodeChange}
-                    />
-                    <div
-                      onClick={this.onEnterPass}
-                      className="end-btn btn-common"
-                    >Tiếp tục
-                    </div>
-                  </>
-                  )}
+                <div className="input-group form-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text"><FontAwesomeIcon icon={faKey} /></span>
+                  </div>
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Nhập lại mật khẩu"
+                    value={newPassword}
+                    onChange={this.handleNewPassword}
+                  />
+                </div>
+
+                <div className="error-text">
+                  {errMsg}
+                </div>
+
+                <div className="form-group">
+                  <div
+                    type="submit"
+                    className="login_btn"
+                    onClick={this.handleRegister}
+                  >Đăng ký
+                  </div>  
+                </div>
               </form>
             </div>
+          
             <KCSModal
               isOpenModal={isOpenModal}
               title="Chúc mừng"
               content="Bạn đã đăng ký tài khoản thành công!"
               confirmButton="Đăng nhập"
               closeModal={this.closeModal}
-              confirmAction={this.handleRegister}
+              confirmAction={this.handleLogin}
             />
           </div>
         </div>
