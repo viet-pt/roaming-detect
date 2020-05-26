@@ -69,12 +69,13 @@
   align-content: center;
 }
 
-.text-description {
-  color: #ccc;
+.error-text {
+  color: red;
   font-size: 13px;
   margin-left: 1.25rem;
+  min-height: 30px;
 }
-  
+
 .card {
   height: 400px;
   width: 400px;
