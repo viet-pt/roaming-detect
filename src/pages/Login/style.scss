@@ -27,6 +27,12 @@
     font-weight: bold;
     background-color: #fff;
   }
+  &__error-text {
+    color: red;
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 20px;
+  }
   input {
     border: solid 1px #fff;
     outline: none;
@@ -62,6 +68,10 @@
   }
   .end-btn {
     margin-top: 2em;
+  }
+  .input-group-text {
+    display: flex;
+    justify-content: center;
   }
 }
 
@@ -133,11 +143,16 @@ input:focus{
   color: black;
   background-color: white;
 }
+
+.color-white {
+  color: #fff;
+}
+
   
 .links{
-  color: white;
+  color: #007bff;
 }
   
-.links a{
+.links a {
   margin-left: 4px;
 }

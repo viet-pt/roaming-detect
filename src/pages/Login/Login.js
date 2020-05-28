@@ -2,7 +2,7 @@ import React from 'react';
 import './style.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faKey } from '@fortawesome/fontawesome-free-solid';
-import { SIGNUP, HOME_PAGE } from 'global/routes';
+import { HOME_PAGE } from 'global/routes';
 import { withRouter } from 'react-router';
 import logo_VNPT from 'assets/icons/vnpt-logo.png';
 import { KCSModal } from 'components';
@@ -15,6 +15,7 @@ class Login extends React.PureComponent {
   state = {
     userName: '',
     password: '',
+    content: '',
     isOpenModal: false
   }
 
@@ -30,34 +31,63 @@ class Login extends React.PureComponent {
 
   handleLogin = () => {
     const { userName, password } = this.state;
+
+    let errMsg = null;
+    if (!userName || !password) {
+      errMsg = 'Tên tài khoản hoặc mật khẩu không được để trống!';
+    }
+
+    if (errMsg) {
+      this.setState({ errMsg });
+      return;
+    }
+
     const params = {
-      userName,
+      username: userName,
       password
     };
 
     this.props.showProgressTurn();
-    AdminService.login({ params }, (res) => {
+    AdminService.login(params, res => {
       this.props.hideProgressTurn();
-      const cookies = new Cookies();
-      // NEED TO UPATE
-      cookies.set(
-        'access_token',
-        res.access_token,
-        { path: '/', expires: res.expires_in }
-      );
+      if (res && res.errorCode === '0') {
+        const cookies = new Cookies();
+        const d = new Date();
+        d.setTime(d.getTime() + parseInt(res.expireTime));
+        cookies.set(
+          'access_token',
+          res.token,
+          { path: '/', expires: d }
+        );
+        this.props.history.push(HOME_PAGE);
+      } else {
+        this.setState({
+          isOpenModal: true,
+          content: 'Tên tài khoản hoặc mật khẩu không đúng, vui lòng thử lại!'
+        });
+      }
     }, () => {
       this.props.hideProgressTurn();
-      this.setState({ isOpenModal: true });
+      this.setState({
+        isOpenModal: true,
+        content: 'Tên tài khoản hoặc mật khẩu không đúng, vui lòng thử lại!'
+      });
     });
-    this.props.history.push(HOME_PAGE); // NEED TO UPDATE
   }
 
   closeModal = () => {
     this.setState({ isOpenModal: false });
   }
 
+  handleRegister = () => {
+    this.setState({
+      isOpenModal: true,
+      content: 'Tính năng này hiện chưa có, vui lòng thử lại!'
+    });
+  }
+
   render() {
-    const { userName, password, isOpenModal } = this.state;
+    const { userName, password, isOpenModal, content, errMsg } = this.state;
     return (
       <div className="container login">
         <div className="d-flex justify-content-center h-100">
@@ -99,23 +129,29 @@ class Login extends React.PureComponent {
                 <div className="row align-items-center remember">
                   <input type="checkbox" />Ghi nhớ
                 </div>
+                <div className="login__error-text mt-1">
+                  {errMsg}
+                </div>
                 <div className="form-group">
                   <div
                     type="submit"
                     className="login_btn"
-                    // onClick={this.handleLogin} // FAKE DATA
-                    onClick={() => this.setState({ isOpenModal: true })}
+                    onClick={this.handleLogin}
                   >Đăng nhập
                   </div>  
                 </div>
               </form>
             </div>
-            <div className="card-footer">
-              <div className="d-flex justify-content-center links">
-                Chưa có tài khoản?<a href={SIGNUP}>Đăng ký</a>
-              </div>
+
+            {/* FAKE DATA */}
+            <div className="card-footer" onClick={this.handleRegister}>
               <div className="d-flex justify-content-center">
-                <a href="/.">Quên mật khẩu?</a>
+                {/* Chưa có tài khoản?<a href={SIGNUP}>Đăng ký</a> */}
+                <span className="color-white mr-2">Chưa có tài khoản?</span>
+                <span className="links"> Đăng ký</span>
+              </div>
+              <div className="d-flex justify-content-center links">
+                Quên mật khẩu?
               </div>
             </div>
           </div>
@@ -123,7 +159,7 @@ class Login extends React.PureComponent {
         <KCSModal
           isOpenModal={isOpenModal}
           title="Có lỗi xảy ra"
-          content="Tên tài khoản hoặc mật khẩu không đúng, vui lòng thử lại!"
+          content={content}
           closeModal={this.closeModal}
           confirmAction={this.closeModal}
         />
