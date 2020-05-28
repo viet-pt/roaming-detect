@@ -16,7 +16,26 @@ class Login extends React.PureComponent {
     userName: '',
     password: '',
     content: '',
-    isOpenModal: false
+    isOpenModal: false,
+    isChecked: false,
+  }
+
+  cookies = new Cookies();
+
+  componentDidMount() {
+    const token = this.cookies.get('access_token');
+    const userName = this.cookies.get('username');
+    if (token && token !== 'undefined') {
+      this.props.history.push(HOME_PAGE);
+      return;
+    }
+
+    if (userName && userName !== 'undefined') {
+      this.setState({
+        isChecked: true,
+        userName,
+      });
+    }
   }
 
   handleUserName = (e) => {
@@ -26,7 +45,11 @@ class Login extends React.PureComponent {
 
   handlePassword = (e) => {
     const { value } = e.target;
-    this.setState({ password: value });
+    if (e.keyCode === 13) {
+      this.handleLogin();
+    } else {
+      this.setState({ password: value });
+    }
   }
 
   handleLogin = () => {
@@ -44,33 +67,40 @@ class Login extends React.PureComponent {
 
     const params = {
       username: userName,
-      password
+      password,
     };
 
     this.props.showProgressTurn();
     AdminService.login(params, res => {
       this.props.hideProgressTurn();
-      if (res && res.errorCode === '0') {
-        const cookies = new Cookies();
+
+      if (res && res.errorCode === '0') {       
         const d = new Date();
         d.setTime(d.getTime() + parseInt(res.expireTime));
-        cookies.set(
+        this.cookies.set(
           'access_token',
           res.token,
-          { path: '/', expires: d }
+          { path: '/', expires: d },
         );
+        
+        if (this.state.isChecked) {
+          this.cookies.set('username', this.state.userName, { path: '/' });
+        } else {
+          this.cookies.set('username', undefined);
+        }
+
         this.props.history.push(HOME_PAGE);
       } else {
         this.setState({
           isOpenModal: true,
-          content: 'Tên tài khoản hoặc mật khẩu không đúng, vui lòng thử lại!'
+          content: 'Tên tài khoản hoặc mật khẩu không đúng, vui lòng thử lại!',
         });
       }
     }, () => {
       this.props.hideProgressTurn();
       this.setState({
         isOpenModal: true,
-        content: 'Tên tài khoản hoặc mật khẩu không đúng, vui lòng thử lại!'
+        content: 'Tên tài khoản hoặc mật khẩu không đúng, vui lòng thử lại!',
       });
     });
   }
@@ -82,12 +112,16 @@ class Login extends React.PureComponent {
   handleRegister = () => {
     this.setState({
       isOpenModal: true,
-      content: 'Tính năng này hiện chưa có, vui lòng thử lại!'
+      content: 'Tính năng này hiện chưa có, vui lòng thử lại!',
     });
   }
 
+  handleCheckbox = () => {
+    this.setState({ isChecked: !this.state.isChecked });
+  }
+
   render() {
-    const { userName, password, isOpenModal, content, errMsg } = this.state;
+    const { userName, password, isOpenModal, content, errMsg, isChecked } = this.state;
     return (
       <div className="container login">
         <div className="d-flex justify-content-center h-100">
@@ -124,10 +158,18 @@ class Login extends React.PureComponent {
                     placeholder="Mật khẩu"
                     value={password}
                     onChange={this.handlePassword}
+                    onKeyDown={this.handlePassword}
                   />
                 </div>
-                <div className="row align-items-center remember">
-                  <input type="checkbox" />Ghi nhớ
+                <div
+                  className="row align-items-center remember"
+                  onClick={this.handleCheckbox}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={this.handleCheckbox}
+                  />Ghi nhớ
                 </div>
                 <div className="login__error-text mt-1">
                   {errMsg}
@@ -144,7 +186,10 @@ class Login extends React.PureComponent {
             </div>
 
             {/* FAKE DATA */}
-            <div className="card-footer" onClick={this.handleRegister}>
+            <div
+              className="card-footer"
+              onClick={this.handleRegister}
+            >
               <div className="d-flex justify-content-center">
                 {/* Chưa có tài khoản?<a href={SIGNUP}>Đăng ký</a> */}
                 <span className="color-white mr-2">Chưa có tài khoản?</span>
