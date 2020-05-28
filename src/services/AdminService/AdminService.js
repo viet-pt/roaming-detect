@@ -12,10 +12,15 @@ const transformPasword = function (params) {
   params.password = convertedPassword;
 }
 
-const login = function (params, successCallback, failCallback) {
-  transformPasword(params.params);
-  const URL = `${baseURL}login`;
-  return postRequest(URL, null, params, successCallback, failCallback);
+const login = function (data, successCallback, failCallback) {
+  transformPasword(data);
+  const URL = `${baseURL}Covid19/api/login/auth`;
+  const params = {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  };
+  return postRequest(URL, data, params, successCallback, failCallback);
 };
 
 const transformLocate = function (response) {

@@ -58,9 +58,9 @@ function makeHttpRequest(apiCall, successCallBack, failCallBack, transformFunc) 
   });
 }
 
-export function getRequest(url, data, config = {}, successCallBack, failCallBack) {
+export function getRequest(url, data, config = {}, successCallBack, failCallBack, transformFunc) {
   transformConfig(config);
-  return makeHttpRequest(() => axios.get(url, data, config), successCallBack, failCallBack);
+  return makeHttpRequest(() => axios.get(url, data, config), successCallBack, failCallBack, transformFunc);
 }
 
 export function postRequest(url, data, config = {}, successCallBack, failCallBack, transformFunc) {

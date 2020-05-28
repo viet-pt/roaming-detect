@@ -10,7 +10,7 @@ import { withRouter } from 'react-router';
 import Cookies from 'universal-cookie';
 import HomeHeader from './Component/HomeHeader';
 import SimpleMap from './Component/SimpleMap';
-// import { LOGIN } from 'global/routes';
+import { LOGIN } from 'global/routes';
 class HomePage extends React.PureComponent {
   state = {
     isMarkerShown: true,
@@ -19,14 +19,17 @@ class HomePage extends React.PureComponent {
     locationList: [],
     isOpenModal: false,
     title: '',
-    content: ''
+    content: '',
+    authorized: false
   }
 
   componentDidMount() {
     const cookies = new Cookies();
     const token = cookies.get('access_token');
-    if (!token) {
-      // this.props.history.push(LOGIN);  // NEED TO UPDATE
+    if (!token || token === "undefined") {
+      this.props.history.push(LOGIN);
+    } else {
+      this.setState({ authorized: true });
     }
   }
 
@@ -79,7 +82,10 @@ class HomePage extends React.PureComponent {
   }
 
   render() {
-    const { locationList, isDisabledExport, isOpenModal, title, content } = this.state;
+    const { locationList, isDisabledExport, isOpenModal, title, content, authorized } = this.state;
+    if (!authorized) {
+      return null;
+    }
     return (
       <div className="home-page">
         <HomeHeader

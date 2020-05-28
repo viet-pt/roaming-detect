@@ -4,12 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faUser, faSignOutAlt } from '@fortawesome/fontawesome-free-solid';
 import { withRouter } from 'react-router';
 import { LOGIN } from 'global/routes';
+import Cookies from 'universal-cookie';
 import './style.scss';
 
 class Profile extends React.PureComponent {
   state = {
     isClickProfile: false,
   };
+  cookies = new Cookies();
 
 	handleOnClick = () => {
 	  this.setState({ isClickProfile: !this.state.isClickProfile });
@@ -24,6 +26,7 @@ class Profile extends React.PureComponent {
   }
 
   logOut = () => {
+    this.cookies.set('access_token', undefined);
     this.props.history.push(LOGIN);
   }
 
